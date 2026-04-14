@@ -1,0 +1,9 @@
+*
+!.gitignore
+!settings.json
+!tasks.json
+!launch.json
+!extensions.json
+!*.code-snippets
+
+# Add custom entries after this line to be preserved during automated updates

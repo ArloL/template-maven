@@ -1,0 +1,65 @@
+name: Chores
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+    - chores
+  schedule:
+  - cron: "14 11 2 * *"
+permissions: {}
+concurrency: chores
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Dump job context
+      env:
+        JOB_CONTEXT: ${{ toJSON(job) }}
+      run: echo "$JOB_CONTEXT"
+    - name: Dump steps context
+      env:
+        STEPS_CONTEXT: ${{ toJSON(steps) }}
+      run: echo "$STEPS_CONTEXT"
+    - name: Dump runner context
+      env:
+        RUNNER_CONTEXT: ${{ toJSON(runner) }}
+      run: echo "$RUNNER_CONTEXT"
+    - name: Dump strategy context
+      env:
+        STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+      run: echo "$STRATEGY_CONTEXT"
+    - name: Dump matrix context
+      env:
+        MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+      run: echo "$MATRIX_CONTEXT"
+    - name: Dump environment variables
+      run: set
+  chores:
+    name: Chores
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        persist-credentials: false
+    - name: Chores
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/ArloL/chorito/HEAD/run-latest.sh)"
+        git diff
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+      with:
+        body: "Automated changes by [chorito](https://github.com/ArloL/chorito)"
+        branch: chorito/patch
+        commit-message: "chore: automated changes by chorito"
+        title: "chore: automated changes by chorito"

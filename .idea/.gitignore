@@ -1,0 +1,12 @@
+### IntelliJ IDEA ###
+
+*
+!/.gitignore
+!/eclipseCodeFormatter.xml
+!/externalDependencies.xml
+!/saveactions_settings.xml
+!/codeStyles
+!/codeStyles/codeStyleConfig.xml
+!/codeStyles/Project.xml
+
+# Add custom entries after this line to be preserved during automated updates
