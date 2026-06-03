@@ -227,7 +227,7 @@ jobs:
           --batch-mode \
           -Dsha1="${GITHUB_SHA}" \
           -Drevision="${REVISION}" \
-          -DaltDeploymentRepository="github::default::https://maven.pkg.github.com/${GITHUB_REPOSITORY}" \
+          -DaltDeploymentRepository="github::https://maven.pkg.github.com/${GITHUB_REPOSITORY}" \
           deploy
     - name: Make sure build did not change anything
       run: git diff --exit-code
