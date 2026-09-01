@@ -46,12 +46,15 @@ jobs:
     # Dependency bumps don't need an analysis, and Dependabot pull requests
     # can't read SONAR_TOKEN from the sonarcloud environment anyway. This keys
     # on the actor because a branch name is something any collaborator can
-    # forge, and skipping this job is what lets a pull request merge
+    # forge, and skipping this job is what lets a pull request merge. It is
+    # the author rather than github.actor because the actor is whoever
+    # triggered the run: a rebase comment or a re-run makes it a human, and
+    # the analysis would then hand SONAR_TOKEN to the bumped dependency
     if: >-
       github.event_name != 'pull_request'
       || (
-        github.actor != 'dependabot[bot]'
-        && github.actor != 'renovate[bot]'
+        github.event.pull_request.user.login != 'dependabot[bot]'
+        && github.event.pull_request.user.login != 'renovate[bot]'
       )
     runs-on: ubuntu-latest
     environment: sonarcloud
