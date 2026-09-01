@@ -43,6 +43,16 @@ jobs:
       run: set
   analyze:
     name: Analyze
+    # Dependency bumps don't need an analysis, and Dependabot pull requests
+    # can't read SONAR_TOKEN from the sonarcloud environment anyway. This keys
+    # on the actor because a branch name is something any collaborator can
+    # forge, and skipping this job is what lets a pull request merge
+    if: >-
+      github.event_name != 'pull_request'
+      || (
+        github.actor != 'dependabot[bot]'
+        && github.actor != 'renovate[bot]'
+      )
     runs-on: ubuntu-latest
     environment: sonarcloud
     permissions:
@@ -69,9 +79,12 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         set -o xtrace
+        # Wait for the quality gate so a failure fails this workflow's own
+        # required status check, which also reports on the bumps we skip
         ./mvnw \
           --batch-mode \
           -Dsha1="${GITHUB_SHA}" \
+          -Dsonar.qualitygate.wait=true \
           verify \
           sonar:sonar
     - name: Make sure build did not change anything
@@ -90,5 +103,8 @@ jobs:
     - name: Check that all jobs were successful
       env:
         RESULTS: ${{ toJSON(needs) }}
+      # analyze has no needs, so "skipped" can only mean its own if was
+      # false: a dependency bump pull request it deliberately opted out of
       run: |
-        echo "$RESULTS" | jq --exit-status 'all(.result == "success")' || exit 1
+        echo "$RESULTS" | jq --exit-status \
+          'all(.result == "success" or .result == "skipped")' || exit 1
