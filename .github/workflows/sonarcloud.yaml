@@ -48,8 +48,7 @@ jobs:
     # the author because github.actor turns human on a rebase or re-run, and a
     # branch name is something any collaborator can forge
     if: >-
-      github.event_name != 'pull_request'
-      || (
+      github.event_name != 'pull_request' || (
         github.event.pull_request.user.login != 'dependabot[bot]'
         && github.event.pull_request.user.login != 'renovate[bot]'
       )
