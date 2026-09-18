@@ -13,7 +13,7 @@ permissions: {}
 
 jobs:
   debug:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
     - name: Dump GitHub context
       env:
