@@ -63,7 +63,7 @@
 				<configuration>
 					<rules>
 						<requireMavenVersion>
-							<version>3.9.16</version>
+							<version>3.10.0</version>
 						</requireMavenVersion>
 						<requirePluginVersions />
 						<bannedDependencies>
