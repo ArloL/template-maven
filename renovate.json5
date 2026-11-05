@@ -11,6 +11,18 @@
         "dependencies",
     ],
     "minimumReleaseAge": "7 days",
+    "packageRules": [
+        {
+            // Adoptium's release_versions has no dates, so the
+            // minimumReleaseAge never passes and the update stays
+            // pending. null turns the age check off for it.
+            // https://github.com/renovatebot/renovate/discussions/47778
+            "matchDatasources": [
+                "java-version",
+            ],
+            "minimumReleaseAge": null,
+        },
+    ],
     "prConcurrentLimit": 10,
     "prHourlyLimit": 5,
     "schedule": [
